@@ -1,17 +1,9 @@
+# Kyle Plummer P0 Examples
 
-def navigate(menu: Menu):
-    current_menu = menu
+I will put some example code for the P0 project here. 
 
-running = True
-current_menu = main_menu
-while(running):
-    current_menu.render()
+I've added some basic examples for menus and terminal. Something to note is that I did this in the OOP way, where every entity I worked on was a class. It started to become apparent right away why this adds more difficulty than OOP-first languages. Type hints began to give me issues with circular imports, and I have too many references flying around already with only like 4 classes.
 
+If I were to refactor this, I would start by making the Terminal a singleton, and not a class object. There will only ever need to be one terminal in the life of the program, the terminal we are presenting to the user. We never create a second one.
 
-def render():
-    print("Enter a first name: ")
-    first_name = input()
-    print("Enter a last name: ")
-    last_name = input()
-    new_student = Student(first_name, last_name)
-    navigate(New_)
+We start by loading in the main menu, which prompts the user for a menu selection. That input runs through a switch (called "match" in python) statement. Depending on the selection, different things happen. Most are not yet implemented, but the New Student menu and the Quit action are implemented. Selecting new student queues up the next menu and exits the function. Selecting quit sets the "running" variable to false, so next time we iterate the loop, we quit.
