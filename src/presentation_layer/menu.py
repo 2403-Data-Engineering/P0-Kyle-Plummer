@@ -1,11 +1,20 @@
 from __future__ import annotations
+
+import re
+
+from enum import Enum
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 
-from models.student import Student
+
 
 if TYPE_CHECKING:
     from presentation_layer.terminal import Terminal
+
+class Validator(Enum):
+    EMAIL = "([\w.-]+)@([\w.-]+\.[a-zA-Z]{2,})"
+    NAME = ".{2,}"
+    YEAR = "Freshman|Sophmore|Junior|Senior"
 
 class Menu:
     def __init__(self, terminal: Terminal):
@@ -14,56 +23,21 @@ class Menu:
     @abstractmethod
     def render() -> None:
         pass
+    
+    def get_input(self, prompt: str, validator: Validator=None) -> str:
+        print(prompt)
+        for i in range(3):
+            input = input()
+            if not validator:
+                return input
+            if re.fullmatch(input, validator):
+                return input
+            print("Invalid input, please try again.")
+        print("Too many failed attempts...")
+        self.terminal.quit()
 
 
-class MainMenu(Menu):
-    def render(self) -> None:
-        print("""
-===========================
-Welcome to uRevature Admin
-1) Create new student
-2) Create new professor
-3) Create new class
-4) Enroll student in class
-5) Run report
-Q) Quit
-        """)
 
-        user_input: str = input().lower()
-        match user_input:
-            case "1":
-                self.terminal.navigate(NewStudentMenu(self.terminal)) 
-            case "2":
-                print("TODO: IMPLEMENT ME")
-            case "3":
-                print("TODO: IMPLEMENT ME")
-            case "4":
-                print("TODO: IMPLEMENT ME")
-            case "5":
-                print("TODO: IMPLEMENT ME")
-            case "q":
-                self.terminal.quit()
 
-class NewStudentMenu(Menu):
-    def render(self):
-                print("""
-===========================
-New Student Menu
-""")
-                
-                print("First name: ")
-                first_name: str = input()
-                print("Last name: ")
-                last_name: str = input()
-                print("Major: ")
-                major: str = input()
-                print("Email: ")
-                email: str = input()
-                print("Year: ")
-                year: str = input()
-                # Implement validation steps between prompts?
 
-                new_student: Student = Student(first_name, last_name, major, email, year)
-                self.terminal.student_service.save(new_student)
 
-                self.terminal.navigate(MainMenu(self.terminal))
