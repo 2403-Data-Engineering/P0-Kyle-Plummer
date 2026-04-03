@@ -1,24 +1,17 @@
-from __future__ import annotations
-
 import re
 
 from enum import Enum
-from abc import abstractmethod
-from typing import TYPE_CHECKING
-
-
-
-if TYPE_CHECKING:
-    from presentation_layer.terminal import Terminal
+from abc import ABC, abstractmethod
+from presentation_layer.base_terminal import BaseTerminal
 
 class Validator(Enum):
     EMAIL = "([\w.-]+)@([\w.-]+\.[a-zA-Z]{2,})"
     NAME = ".{2,}"
     YEAR = "Freshman|Sophmore|Junior|Senior"
 
-class Menu:
-    def __init__(self, terminal: Terminal):
-        self.terminal:Terminal = terminal
+class BaseMenu(ABC):
+    def __init__(self, terminal: BaseTerminal):
+        self.terminal:BaseTerminal = terminal
 
     @abstractmethod
     def render() -> None:
@@ -27,17 +20,13 @@ class Menu:
     def get_input(self, prompt: str, validator: Validator=None) -> str:
         print(prompt)
         for i in range(3):
-            input = input()
+            user_input = input()
             if not validator:
-                return input
-            if re.fullmatch(input, validator):
-                return input
+                return user_input
+            if re.fullmatch(validator.value, user_input):
+                return user_input
             print("Invalid input, please try again.")
         print("Too many failed attempts...")
         self.terminal.quit()
-
-
-
-
 
 
