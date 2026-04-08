@@ -20,7 +20,7 @@ def get_connection():
 def select_messages() -> None:
     with get_connection() as conn:
         cursor = conn.cursor(dictionary=True)
-        sql = "SELECT * FROM demo_table"
+        sql = "SELECT * FROM demo_table WHERE 1=0"
         cursor.execute(sql)
         for row in cursor:
             print(row)
@@ -38,3 +38,4 @@ def create_message(message: str) -> None:
         conn.commit()
 
 
+select_messages()
